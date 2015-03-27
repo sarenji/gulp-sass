@@ -13,6 +13,8 @@ module.exports = function (options) {
   function sass (file, cb) {
     var opts = options ? clone(options) : {};
     var fileDir = path.dirname(file.path);
+    var compiler = opts.compiler || nodeSass;
+    delete opts.compiler;
 
     if (file.isNull()) {
       return cb(null, file);
@@ -82,14 +84,14 @@ module.exports = function (options) {
 
     if ( opts.sync ) {
       try {
-        var output = nodeSass.renderSync(opts);
+        var output = compiler.renderSync(opts);
         opts.success(output);
         handleOutput(output, file, cb);
       } catch(err) {
         opts.error(err);
       }
     } else {
-      nodeSass.render(opts);
+      compiler.render(opts);
     }
 
   }
